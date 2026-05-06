@@ -1,0 +1,220 @@
+# 小说创作 Prompt 模板
+
+---
+
+## outline_prompt（大纲生成）
+
+```text
+你是一位才华横溢的{genre}小说家。
+
+## 素材来源
+以下是从视频中提炼的故事素材：
+
+{content_summary}
+
+## 创作要求
+- 类型：{genre}
+- 视角：{perspective}
+- 文风：{tone}
+- 目标字数：{target_length} 字
+- 创意自由度：{creativity_level}
+
+  忠实模式：严格按照视频内容改编，不虚构主要情节
+  适度创作：保留核心事件，补充细节和心理描写，允许合理虚构
+  自由创作：以视频为灵感，大胆再创作，允许改变结局和人物命运
+
+## 任务
+请分两步完成：
+
+### 第一步：内容结构分析
+分析素材内容，识别以下要素：
+1. 核心主题/故事线有多少个？
+2. 主要场景/时间段有哪些？
+3. 关键转折点在哪里？
+4. 基于内容结构，建议分多少章？
+
+### 第二步：生成小说大纲
+以 JSON 格式返回，严格按照以下结构：
+
+{
+  "novel_title": "小说标题（有文学感，不要直接用视频标题）",
+  "tagline": "一句话简介",
+  "structure_analysis": {
+    "core_themes": ["主题1", "主题2", "..."],
+    "scene_transitions": [
+      {"from": "场景1/时间段1", "to": "场景2/时间段2", "reason": "转换原因"}
+    ],
+    "key_turning_points": ["转折点1", "转折点2", "..."]
+  },
+  "novel_bible": {
+    "characters": [
+      {
+        "name": "角色名",
+        "role": "主角/配角/反派",
+        "personality": "性格特征（3-5个关键词）",
+        "motivation": "核心动机/欲望",
+        "relationships": "与其他角色的关系",
+        "physical_traits": "外貌特征（如文中出现）",
+        "speech_style": "说话风格/口头禅"
+      }
+    ],
+    "world_setting": {
+      "time_period": "时代背景",
+      "location": "主要场景/地点",
+      "rules": "世界观规则/设定（如有）",
+      "atmosphere": "整体氛围基调"
+    },
+    "plot_threads": [
+      {
+        "thread_name": "主线/副线名称",
+        "description": "这条线的核心内容",
+        "status": "已展开/进行中/已收束/未展开"
+      }
+    ],
+    "foreshadowing": [
+      {
+        "element": "伏笔元素",
+        "setup_chapter": "在哪一章埋下",
+        "payoff_chapter": "预计在哪一章回收"
+      }
+    ],
+    "key_facts": ["必须在全文保持一致的关键事实1", "关键事实2", "..."]
+  },
+  "chapters": [
+    {
+      "chapter_number": 1,
+      "title": "章节标题",
+      "theme": "本章核心主题",
+      "summary": "本章内容概要（50-100 字）",
+      "key_scenes": ["场景1", "场景2"],
+      "turning_point": "是否包含关键转折点（是/否）",
+      "estimated_words": 1500,
+      "emotional_tone": "本章情绪基调",
+      "characters_involved": ["本章出现的角色"],
+      "plot_progression": "本章推进了哪些情节线",
+      "new_elements": "本章引入的新元素（人物/线索/设定）",
+      "transition_to_next": "如何自然过渡到下一章（简要说明）"
+    }
+  ],
+  "opening_hook": "开篇第一段的方向（吸引读者继续阅读的切入点）",
+  "ending_type": "结尾类型（开放式/圆满/悲剧/留白等）",
+  "chapter_count_rationale": "章节划分的理由说明（解释为什么这样分章，如何体现内容结构的完整性）"
+}
+```
+
+---
+
+## chapter_writing_prompt（逐章写作）
+
+```text
+你是正在创作《{novel_title}》的小说家，文风为{tone}，采用{perspective}叙事。
+
+## 小说 Bible（全文必须保持一致的设定）
+{novel_bible}
+
+## 已写章节的深度摘要（前情回顾）
+{previous_chapters_summary}
+
+## 上一章摘要（供衔接使用）
+{immediate_previous_summary}
+
+## 本章大纲
+第{chapter_number}章《{chapter_title}》
+核心内容：{chapter_summary}
+关键场景：{key_scenes}
+涉及角色：{characters_involved}
+推进情节：{plot_progression}
+情绪基调：{emotional_tone}
+目标字数：约 {word_count_target} 字
+
+## 参考素材（来自原视频此时段）
+{relevant_timeline_data}
+
+## 写作要求
+1. 开头要有带入感，自然承接上一章的结尾
+2. 至少包含一处详细的环境或场景描写
+3. 对话要生动，符合人物性格和说话风格
+4. 加入人物内心独白和情绪变化
+5. 保持人物行为与 Bible 中的设定一致
+6. 推进 Bible 中列出的情节线
+7. 如果本章涉及伏笔，按 Bible 中的设定埋下或回收
+8. 结尾留有悬念或自然过渡到下一章
+
+请直接开始写作，不要有任何前置说明：
+```
+
+---
+
+## chapter_summary_prompt（章节完成后生成深度摘要）
+
+```text
+请为刚完成的第{chapter_number}章生成结构化深度摘要，供下一章写作时参考。
+
+摘要格式：
+
+{
+  "chapter_number": {chapter_number},
+  "title": "章节标题",
+  "what_happened": "本章发生的核心事件（100-150字）",
+  "character_states": {
+    "角色名": "当前状态/心理变化/位置"
+  },
+  "plot_threads_status": {
+    "情节线名称": "已推进/已收束/悬而未决 — 当前进展"
+  },
+  "new_information": ["本章揭示的新信息", "新引入的元素"],
+  "unresolved_threads": ["悬而未决的问题或冲突"],
+  "foreshadowing": {
+    "planted": ["本章埋下的伏笔"],
+    "resolved": ["本章回收的伏笔"]
+  },
+  "key_quotes_or_moments": ["本章关键对话或场景（1-2句）"],
+  "ending_state": "本章结尾的状态（时间、地点、人物处境）",
+  "transition_hook": "下一章需要承接的具体方向"
+}
+```
+
+---
+
+## all_chapters_summary_prompt（全部章节完成后生成全局摘要）
+
+```text
+请为以下所有章节生成一份全局深度摘要，用于最终润色时参考。
+
+摘要格式：
+
+{
+  "full_story_arc": "完整故事线概述（200-300字）",
+  "character_arcs": {
+    "角色名": "从开始到结束的完整变化轨迹"
+  },
+  "plot_threads_resolution": {
+    "情节线名称": "如何开始 -> 如何发展 -> 如何结束"
+  },
+  "foreshadowing_tracker": {
+    "伏笔元素": "埋下于第X章 -> 回收于第Y章"
+  },
+  "timeline": "按时间顺序的关键事件列表",
+  "thematic_progression": "主题如何从开篇到结尾逐步深化"
+}
+```
+
+---
+
+## polish_prompt（全文润色）
+
+```text
+请对以下小说进行润色，重点检查和修正：
+
+1. 一致性检查：人物名字、外貌描述、时间线是否前后一致
+2. 过渡优化：章节之间的衔接是否自然流畅
+3. 文风统一：确保全文语气和叙事风格保持一致（{tone}风格）
+4. 节奏调整：段落长度是否合理，是否有突兀的跳跃
+5. 开头增强：确保第一段能迅速抓住读者
+6. 结尾收束：确保结尾有力，与主题呼应
+
+原文如下：
+{full_text}
+
+请返回润色后的完整文本，不要添加任何说明，直接输出小说正文。
+```
