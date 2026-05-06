@@ -1,0 +1,14 @@
+# macOS
+.DS_Store
+
+# Python caches
+**/__pycache__/
+*.pyc
+
+# XHS -> Notion runtime sensitive files
+xhs-to-notion/runtime/config/config.yaml
+xhs-to-notion/runtime/cookies/
+xhs-to-notion/runtime/.trae_artifacts/
+xhs-to-notion/runtime/.venv/
+xhs-to-notion/runtime/venv/
+xhs-to-notion/runtime/logs/

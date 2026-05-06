@@ -1,0 +1,40 @@
+# ============ 平台 Cookie ============
+cookies:
+  douyin: "./cookies/douyin_cookies.json"
+  xiaohongshu: "./cookies/xhs_cookies.json"
+
+# ============ AI 总结（可选） ============
+ai:
+  # 仅在“脚本自己调模型”模式下需要。
+  # 如果你在 Trae 里通过 Skill 使用，可先留占位值，改由 Agent 内置 AI 总结。
+  provider: "deepseek"          # 可选: "deepseek" | "openai"
+  deepseek:
+    api_key: "sk-xxxxx"
+    model: "deepseek-chat"
+    base_url: "https://api.deepseek.com"
+  openai:
+    api_key: "sk-xxxxx"
+    model: "gpt-4o"
+  # 可选图片分析配置；留空则跳过图片理解步骤
+  gemini:
+    api_key: ""
+    model: "google/gemini-2.0-flash-001"
+    base_url: "https://openrouter.ai/api/v1"
+
+# ============ 归档目标 ============
+export:
+  target: "notion"            # 可选: "notion" | "feishu" | "both"
+  notion:
+    api_key: "ntn_xxxxx"
+    database_id: "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+  feishu:
+    app_id: "cli_xxxxxx"
+    app_secret: "xxxxxxxx"
+    app_token: "xxxxxxxx"
+    table_id: "tblxxxxxx"
+
+# ============ 通用 ============
+request:
+  delay_seconds: 3
+  timeout: 15
+  max_retries: 2

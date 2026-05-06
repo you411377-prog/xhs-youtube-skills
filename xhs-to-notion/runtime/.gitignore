@@ -1,0 +1,18 @@
+# Sensitive local files
+config/config.yaml
+cookies/
+
+# Runtime artifacts
+.trae_artifacts/
+logs/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store

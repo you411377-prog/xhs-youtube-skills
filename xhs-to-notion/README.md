@@ -12,6 +12,33 @@
 
 ---
 
+## 仓库结构
+
+这版仓库不再只放 Skill 文档，也包含了 `xhs -> notion` 的关键运行时代码：
+
+```text
+xhs-to-notion/
+├── SKILL.md
+├── README.md
+└── runtime/
+    ├── src/
+    ├── tests/
+    ├── config/
+    │   └── config.example.yaml
+    ├── requirements.txt
+    ├── REAL_SETUP.md
+    ├── README.md
+    └── .gitignore
+```
+
+说明：
+
+- `SKILL.md` 负责定义 Agent/Skill 工作流
+- `runtime/` 负责承载本地可运行的抓取、总结、导出代码
+- 敏感文件如 `config/config.yaml`、`cookies/`、`.trae_artifacts/` 已被 `.gitignore` 排除
+
+---
+
 ## 使用方法
 
 安装后，直接告诉 Agent：
@@ -103,7 +130,8 @@ cd /Users/bytedance/Documents/trae_projects/social-media-assistant
 ```text
 xhs-to-notion/
 ├── SKILL.md    # 主技能文件
-└── README.md   # 安装说明和示例
+├── README.md   # Skill 使用说明
+└── runtime/    # 关键运行时代码
 ```
 
 ---
