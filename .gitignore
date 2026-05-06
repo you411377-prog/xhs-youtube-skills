@@ -12,3 +12,8 @@ xhs-to-notion/runtime/.trae_artifacts/
 xhs-to-notion/runtime/.venv/
 xhs-to-notion/runtime/venv/
 xhs-to-notion/runtime/logs/
+
+# YouTube -> Novel runtime local files
+youtube-to-novel/.venv/
+youtube-to-novel/venv/
+youtube-to-novel/logs/

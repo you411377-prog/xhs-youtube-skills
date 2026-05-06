@@ -177,8 +177,8 @@ ffmpeg -i {video_path} -vf "fps=1/120" -q:v 2 {frames_dir}/frame_%04d.jpg 2>/dev
 
 **Notion 自动归档规则：**
 
-- 优先复用本地项目 `/Users/bytedance/Documents/trae_projects/social-media-assistant`
-- 若该项目已配置 Notion，或用户本轮对话明确提供了 Notion token 和 database id，则在生成小说后自动执行归档
+- 优先使用当前 skill 仓库内的 `runtime/export_to_notion.py`
+- 若用户本轮对话明确提供了 Notion token 和 database id，则在生成小说后自动执行归档
 - 数据库属性建议只保留与视频内容、小说内容相关的字段，例如：
   - 一句话摘要
   - 主题标签
@@ -195,18 +195,12 @@ ffmpeg -i {video_path} -vf "fps=1/120" -q:v 2 {frames_dir}/frame_%04d.jpg 2>/dev
 - 推荐调用方式：
 
 ```bash
-cd /Users/bytedance/Documents/trae_projects/social-media-assistant
-./.venv/bin/python -m src.main \
-  --export-youtube-novel \
+cd youtube-to-novel
+python runtime/export_to_notion.py \
   --artifact-dir {video_artifact_dir} \
-  --novel-file {novel_markdown_path}
-```
-
-- 若用户本轮显式提供了 Notion 凭据，则追加覆盖参数：
-
-```bash
---notion-api-key "{notion_api_key}" \
---notion-database-id "{notion_database_id}"
+  --novel-file {novel_markdown_path} \
+  --notion-api-key "{notion_api_key}" \
+  --notion-database-id "{notion_database_id}"
 ```
 
 ---
