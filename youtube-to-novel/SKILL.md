@@ -9,6 +9,8 @@ description: "将 YouTube 视频或播客自动改编为小说。用户要求把
 
 本 skill 将视频或音频内容全自动转化为小说。AI Agent 负责所有中间步骤，用户只需提供链接和偏好。
 
+若本地已配置 Notion 归档能力，则默认在小说生成完成后自动写入 Notion 知识库，无需用户额外手动执行命令。
+
 **支持输入：**
 - YouTube 视频链接
 - 本地上传的视频文件（mp4/mov/avi）
@@ -34,6 +36,19 @@ description: "将 YouTube 视频或播客自动改编为小说。用户要求把
 ```
 
 若用户说"随便"或"你决定"，使用默认值：现实主义 / 第三人称 / 文艺 / 5000 字。
+
+收集到的偏好必须结构化落盘到视频产物目录，例如 `novel_metadata.json`，至少包含：
+
+```json
+{
+  "genre": "科幻",
+  "perspective": "第三人称",
+  "style": "文艺",
+  "target_words": 5000
+}
+```
+
+后续 Notion 归档时直接读取该文件，自动填写 `小说类型`、`叙事视角`、`文风` 等字段。
 
 ---
 
@@ -150,7 +165,7 @@ ffmpeg -i {video_path} -vf "fps=1/120" -q:v 2 {frames_dir}/frame_%04d.jpg 2>/dev
 
 ---
 
-### 第 6 步：输出结果
+### 第 6 步：输出结果与 Notion 归档
 
 生成最终 Markdown 文件并向用户展示：
 
@@ -158,6 +173,41 @@ ffmpeg -i {video_path} -vf "fps=1/120" -q:v 2 {frames_dir}/frame_%04d.jpg 2>/dev
 2. 章节目录
 3. 前 500 字预览
 4. 下载链接
+5. 如果 Notion 已配置，自动归档并返回页面链接
+
+**Notion 自动归档规则：**
+
+- 优先复用本地项目 `/Users/bytedance/Documents/trae_projects/social-media-assistant`
+- 若该项目已配置 Notion，或用户本轮对话明确提供了 Notion token 和 database id，则在生成小说后自动执行归档
+- 数据库属性建议只保留与视频内容、小说内容相关的字段，例如：
+  - 一句话摘要
+  - 主题标签
+  - 原视频链接
+  - 视频时长
+  - 小说类型
+  - 叙事视角
+  - 文风
+- 页面正文应尽量精简，只保留：
+  - 小说标题
+  - 章节目录
+  - 小说正文
+- 不要把完整视频转写正文一并写入 Notion，避免页面过长、影响复看体验
+- 推荐调用方式：
+
+```bash
+cd /Users/bytedance/Documents/trae_projects/social-media-assistant
+./.venv/bin/python -m src.main \
+  --export-youtube-novel \
+  --artifact-dir {video_artifact_dir} \
+  --novel-file {novel_markdown_path}
+```
+
+- 若用户本轮显式提供了 Notion 凭据，则追加覆盖参数：
+
+```bash
+--notion-api-key "{notion_api_key}" \
+--notion-database-id "{notion_database_id}"
+```
 
 ---
 
@@ -198,4 +248,4 @@ ffmpeg -i {video_path} -vf "fps=1/120" -q:v 2 {frames_dir}/frame_%04d.jpg 2>/dev
 3. 截取关键帧
 4. 使用多模态能力分析内容
 5. 生成大纲、逐章写作并润色
-6. 输出 `{标题}.md` 文件
+6. 输出 `{标题}.md` 文件，并在已配置时自动归档到 Notion
